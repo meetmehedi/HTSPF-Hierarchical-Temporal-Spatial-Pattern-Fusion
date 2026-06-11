@@ -1,16 +1,18 @@
 \begin{table}[h]
 \centering
-\caption{Results on AG News (NLP) (mean \pm std over 5 seeds). $p$-values from paired t-test vs. HTSPF_Full.\label{tab:ag_news}}
-\begin{tabular}{lcccc}
+\caption{Results on AG News (NLP) (mean $\pm$ std over 5 seeds). $p$-values from paired $t$-test vs.\ HTSPF\_Full. \checkmark\, = $p<0.05$.\label{tab:ag_news}}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccc}
 \toprule
-Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Significant \\
+Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Sig. & Sparsity (\%) & GFLOPs \\
 \midrule
-\textbf{HTSPF_Full} & \textbf{94.50 $\pm$ 0.10} & --- & --- & --- \\
-HTSPF_noASG & 94.40 $\pm$ 0.41 & +0.10 & 0.6738 & \times \\
-HTSPF_noConflict & 93.63 $\pm$ 0.36 & +0.87 & 0.0112 & \checkmark \\
-HTSPF_noHCAA & 91.99 $\pm$ 0.41 & +2.51 & 0.0006 & \checkmark \\
-HTSPF_noLDWT & 93.14 $\pm$ 0.14 & +1.35 & 0.0000 & \checkmark \\
-bert_mini & 93.54 $\pm$ 0.25 & +0.95 & 0.0006 & \checkmark \\
+\textbf{HTSPF\_Full}    & \textbf{94.50 $\pm$ 0.10} & ---     & ---    & ---          & 83.2 & 0.50 \\
+HTSPF\_noASG            & 94.40 $\pm$ 0.41          & $-$0.10 & 0.6738 & $\times$     & 0.0  & 1.20 \\
+HTSPF\_noConflict       & 93.63 $\pm$ 0.36          & $-$0.87 & 0.0112 & \checkmark   & 83.0 & 0.50 \\
+HTSPF\_noHCAA           & 91.99 $\pm$ 0.41          & $-$2.51 & 0.0006 & \checkmark   & 83.0 & 0.50 \\
+HTSPF\_noLDWT           & 93.14 $\pm$ 0.14          & $-$1.35 & 0.0000 & \checkmark   & 82.3 & 0.50 \\
+\midrule
+BERT-Mini               & 93.54 $\pm$ 0.25          & $-$0.96 & 0.0006 & \checkmark   & 0.0  & 0.50 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}

@@ -1,16 +1,18 @@
 \begin{table}[h]
 \centering
-\caption{Results on FordA (UCR) (mean \pm std over 5 seeds). $p$-values from paired t-test vs. HTSPF_Full.\label{tab:ford_a}}
-\begin{tabular}{lcccc}
+\caption{Results on FordA (UCR Time-Series) (mean $\pm$ std over 5 seeds). $p$-values from paired $t$-test vs.\ HTSPF\_Full. \checkmark\, = $p<0.05$.\label{tab:ford_a}}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccc}
 \toprule
-Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Significant \\
+Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Sig. & Sparsity (\%) & GFLOPs \\
 \midrule
-\textbf{HTSPF_Full} & \textbf{96.21 $\pm$ 0.05} & --- & --- & --- \\
-HTSPF_noASG & 95.97 $\pm$ 0.15 & +0.24 & 0.0415 & \checkmark \\
-HTSPF_noConflict & 95.49 $\pm$ 0.25 & +0.72 & 0.0036 & \checkmark \\
-HTSPF_noHCAA & 94.25 $\pm$ 0.38 & +1.97 & 0.0008 & \checkmark \\
-HTSPF_noLDWT & 91.74 $\pm$ 0.53 & +4.47 & 0.0001 & \checkmark \\
-inception_time & 95.85 $\pm$ 0.03 & +0.37 & 0.0001 & \checkmark \\
+\textbf{HTSPF\_Full}    & \textbf{96.21 $\pm$ 0.05} & ---     & ---    & ---          & 82.2 & 0.50 \\
+HTSPF\_noASG            & 95.97 $\pm$ 0.15          & $-$0.24 & 0.0415 & \checkmark   & 0.0  & 1.20 \\
+HTSPF\_noConflict       & 95.49 $\pm$ 0.25          & $-$0.72 & 0.0036 & \checkmark   & 82.1 & 0.50 \\
+HTSPF\_noHCAA           & 94.25 $\pm$ 0.38          & $-$1.97 & 0.0008 & \checkmark   & 82.2 & 0.50 \\
+HTSPF\_noLDWT           & 91.74 $\pm$ 0.53          & $-$4.47 & 0.0001 & \checkmark   & 81.8 & 0.50 \\
+\midrule
+InceptionTime           & 95.85 $\pm$ 0.03          & $-$0.37 & 0.0001 & \checkmark   & 0.0  & 0.50 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}

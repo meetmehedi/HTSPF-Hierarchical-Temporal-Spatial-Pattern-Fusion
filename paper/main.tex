@@ -72,21 +72,21 @@ During inference, paths with $m_k = 0$ are skipped entirely.
 HTSPF was benchmarked against established modality-specific baselines and ablations across 5 datasets representing 4 diverse domains. Statistical significance was verified over 5 distinct random seeds using paired t-tests.
 
 \subsection{Vision: CIFAR-100}
-Table \ref{tab:cifar100} demonstrates that HTSPF achieves $78.25 \pm 0.38\%$, outperforming resnet18 ($74.92 \pm 0.62\%$, $p=0.0005$) and vit\_small ($76.45 \pm 0.34\%$, $p=0.0042$). The ablation \textit{HTSPF\_noHCAA} shows a significant 3.30pp drop in accuracy ($p=0.0065$), proving the necessity of Fisher-regularized conflict resolution.
+Table \ref{tab:cifar100} demonstrates that HTSPF achieves $78.25 \pm 0.38\%$, outperforming ResNet-18 ($74.92 \pm 0.62\%$, $p=0.0005$) and ViT-Small ($76.45 \pm 0.34\%$, $p=0.0042$). The ablation \textit{HTSPF\_noHCAA} shows a significant 3.30\,pp drop in accuracy ($p=0.0065$), proving the necessity of Fisher-regularized conflict resolution. Crucially, the Adaptive Sparsity Gate (ASG) achieves 82.9\% structural sparsity at only 0.50 GFLOPs, a 2.4$\times$ reduction versus the dense variant.
 
 \input{tables/final_table_cifar100.tex}
 
 \subsection{Time-Series \& Audio}
-On the UCR Archive (FordA, EthanolConcentration), HTSPF matched or exceeded InceptionTime, the gold-standard time-series CNN. As shown in Table \ref{tab:ford_a}, HTSPF achieves $96.21 \pm 0.05\%$ accuracy on FordA, outperforming InceptionTime ($95.85 \pm 0.03\%$, $p=0.0001$). On EthanolConcentration (Table \ref{tab:ethanol_concentration}), HTSPF achieves $75.56 \pm 0.65\%$, which is competitive with InceptionTime ($75.70 \pm 0.88\%$, $p=0.8501$). 
+On the UCR Archive (FordA, EthanolConcentration), HTSPF matched or exceeded InceptionTime, the gold-standard time-series CNN. As shown in Table~\ref{tab:ford_a}, HTSPF achieves $96.21 \pm 0.05\%$ accuracy on FordA, outperforming InceptionTime ($95.85 \pm 0.03\%$, $p=0.0001$) while maintaining 82.2\% sparsity. On EthanolConcentration (Table~\ref{tab:ethanol_concentration}), HTSPF achieves $75.56 \pm 0.65\%$, which is statistically on par with InceptionTime ($75.70 \pm 0.88\%$, $p=0.8501$) at half the compute.
 
-The importance of the LDWT module is starkly highlighted in the Audio modality (RAVDESS dataset, Table \ref{tab:ravdess}). Removing the wavelet transform (\textit{HTSPF\_noLDWT}) resulted in a catastrophic $7.68$pp drop in accuracy ($p=0.0002$) relative to the full HTSPF ($82.33 \pm 0.30\%$), which also outperforms the AST baseline ($81.21 \pm 0.68\%$, $p=0.0372$). This proves that wavelets are strictly required to compress dense temporal audio signals into a format digestible by attention mechanisms.
+The importance of the LDWT module is starkly highlighted in the Audio modality (RAVDESS dataset, Table~\ref{tab:ravdess}). Removing the wavelet transform (\textit{HTSPF\_noLDWT}) results in a catastrophic $7.68$\,pp drop in accuracy ($p=0.0002$) relative to the full HTSPF ($82.33 \pm 0.30\%$), which also outperforms AST ($81.21 \pm 0.68\%$, $p=0.0372$). This confirms that learnable wavelets are strictly necessary to compress dense temporal audio signals into a form amenable to attention.
 
 \input{tables/final_table_ford_a.tex}
 \input{tables/final_table_ethanol_concentration.tex}
 \input{tables/final_table_ravdess.tex}
 
 \subsection{Natural Language Processing}
-HTSPF natively handles word embeddings as 1D temporal signals. On the AG News text classification benchmark (Table \ref{tab:ag_news}), HTSPF achieved $94.50 \pm 0.10\%$, outperforming BERT-Mini ($93.54 \pm 0.25\%$, $p=0.0006$), further cementing its claim as a universal architecture.
+HTSPF natively handles word embeddings as 1D temporal signals, with no task-specific tokenizer or positional encoder. On the AG News text classification benchmark (Table~\ref{tab:ag_news}), HTSPF achieves $94.50 \pm 0.10\%$, outperforming BERT-Mini ($93.54 \pm 0.25\%$, $p=0.0006$) at 83.2\% sparsity and identical compute (0.50~GFLOPs), further cementing its universality claim.
 
 \input{tables/final_table_ag_news.tex}
 
