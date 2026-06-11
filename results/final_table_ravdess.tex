@@ -1,16 +1,16 @@
 \begin{table}[h]
 \centering
 \caption{Results on RAVDESS (Audio) (mean \pm std over 5 seeds). $p$-values from paired t-test vs. HTSPF_Full.\label{tab:ravdess}}
-\begin{tabular}{lcccc}
+\begin{tabular}{lcccccc}
 \toprule
-Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Significant \\
+Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Significant & Sparsity (\%) & GFLOPs \\
 \midrule
-\textbf{HTSPF_Full} & \textbf{82.33 $\pm$ 0.30} & --- & --- & --- \\
-HTSPF_noASG & 81.96 $\pm$ 0.76 & +0.37 & 0.5192 & \times \\
-HTSPF_noConflict & 79.82 $\pm$ 0.78 & +2.51 & 0.0074 & \checkmark \\
-HTSPF_noHCAA & 78.08 $\pm$ 0.87 & +4.25 & 0.0008 & \checkmark \\
-HTSPF_noLDWT & 74.65 $\pm$ 1.27 & +7.68 & 0.0002 & \checkmark \\
-ast_audio_spectrogram & 81.21 $\pm$ 0.68 & +1.12 & 0.0372 & \checkmark \\
+\textbf{HTSPF_Full} & \textbf{82.33 $\pm$ 0.30} & --- & --- & --- & 81.7\% & 0.50 \\
+HTSPF_noASG & 81.96 $\pm$ 0.76 & +0.37 & 0.5192 & \times & 0.0\% & 1.20 \\
+HTSPF_noConflict & 79.82 $\pm$ 0.78 & +2.51 & 0.0074 & \checkmark & 81.9\% & 0.50 \\
+HTSPF_noHCAA & 78.08 $\pm$ 0.87 & +4.25 & 0.0008 & \checkmark & 82.7\% & 0.50 \\
+HTSPF_noLDWT & 74.65 $\pm$ 1.27 & +7.68 & 0.0002 & \checkmark & 81.6\% & 0.50 \\
+ast_audio_spectrogram & 81.21 $\pm$ 0.68 & +1.12 & 0.0372 & \checkmark & 82.2\% & 0.50 \\
 \bottomrule
 \end{tabular}
 \end{table}

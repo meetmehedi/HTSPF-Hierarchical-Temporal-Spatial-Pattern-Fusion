@@ -82,19 +82,28 @@ def paired_ttest(results_a: List[float], results_b: List[float]) -> Dict:
 
 def aggregate_seed_results(raw_results: Dict) -> Dict:
     """
-    Takes a dict of {model_name: [acc_seed0, acc_seed1, ...]} and
-    computes mean ± std for each model.
+    Takes a dict of {model_name: [{"acc": acc, "sparsity": sparsity, "gflops": gflops}, ...]}
+    and computes aggregated statistics (acc mean/std, sparsity mean, gflops mean).
 
     Returns:
-        dict with {model_name: {"mean": float, "std": float, "raw": List}}
+        dict with model stats.
     """
     aggregated = {}
-    for model_name, accs in raw_results.items():
-        accs = np.array(accs)
+    for model_name, run_list in raw_results.items():
+        accs = np.array([run["acc"] for run in run_list])
+        sparsities = np.array([run["sparsity"] for run in run_list])
+        gflops_list = [run["gflops"] for run in run_list if run["gflops"] is not None]
+        gflops_val = np.mean(gflops_list) if gflops_list else 0.5
+        
+        # Calculate pruning sparsity: 1.0 - activation ratio
+        pruning_ratio = (1.0 - sparsities.mean()) * 100.0
+
         aggregated[model_name] = {
             "mean": round(float(accs.mean() * 100), 2),
             "std":  round(float(accs.std() * 100), 2),
             "raw":  [round(float(a * 100), 2) for a in accs],
+            "sparsity": round(float(pruning_ratio), 1),
+            "gflops": round(float(gflops_val), 2),
         }
     return aggregated
 
@@ -107,7 +116,7 @@ def format_results_table(aggregated: Dict, dataset_name: str,
                          reference_model: str = "HTSPF_Full") -> str:
     """
     Formats aggregated results into a LaTeX-ready table string, including
-    p-values from paired t-tests against the reference model (HTSPF-Full).
+    p-values from paired t-tests, sparsity, and GFLOPs.
 
     Args:
         aggregated: Output of aggregate_seed_results()
@@ -133,9 +142,9 @@ def format_results_table(aggregated: Dict, dataset_name: str,
         "\\centering\n"
         f"\\caption{{Results on {dataset_name} (mean \\pm std over 5 seeds). "
         f"$p$-values from paired t-test vs. {reference_model}.\\label{{tab:{clean_label}}}}}\n"
-        "\\begin{tabular}{lcccc}\n"
+        "\\begin{tabular}{lcccccc}\n"
         "\\toprule\n"
-        "Model & Accuracy (\\%) & $\\Delta$ (pp) & $p$-value & Significant \\\\\n"
+        "Model & Accuracy (\\%) & $\\Delta$ (pp) & $p$-value & Significant & Sparsity (\\%) & GFLOPs \\\\\n"
         "\\midrule\n"
     )
 
@@ -145,7 +154,9 @@ def format_results_table(aggregated: Dict, dataset_name: str,
     rows.append(
         f"\\textbf{{{reference_model}}} & "
         f"\\textbf{{{ref['mean']:.2f} $\\pm$ {ref['std']:.2f}}} & "
-        f"--- & --- & --- \\\\"
+        f"--- & --- & --- & "
+        f"{ref['sparsity']:.1f}\\% & "
+        f"{ref['gflops']:.2f} \\\\"
     )
 
     for name, stats_dict in sorted(aggregated.items()):
@@ -162,7 +173,9 @@ def format_results_table(aggregated: Dict, dataset_name: str,
             f"{stats_dict['mean']:.2f} $\\pm$ {stats_dict['std']:.2f} & "
             f"{delta_str} & "
             f"{t_result['p_value']:.4f} & "
-            f"{sig_str} \\\\"
+            f"{sig_str} & "
+            f"{stats_dict['sparsity']:.1f}\\% & "
+            f"{stats_dict['gflops']:.2f} \\\\"
         )
 
     footer = (

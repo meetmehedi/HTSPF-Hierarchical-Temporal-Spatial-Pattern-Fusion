@@ -50,7 +50,13 @@ def compile_results(raw_dir: str, out_dir: str):
         dataset = data["dataset"]
         model   = data["model"]
         acc     = data.get("test_acc", 0.0)
-        by_dataset.setdefault(dataset, {}).setdefault(model, []).append(acc / 100.0)
+        sparsity = data.get("sparsity", 1.0)
+        gflops   = data.get("gflops", None)
+        by_dataset.setdefault(dataset, {}).setdefault(model, []).append({
+            "acc": acc / 100.0,
+            "sparsity": sparsity,
+            "gflops": gflops
+        })
 
     # ── Process each dataset ──
     full_summary = {}

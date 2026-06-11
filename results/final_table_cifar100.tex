@@ -1,18 +1,18 @@
 \begin{table}[h]
 \centering
 \caption{Results on CIFAR-100 (mean \pm std over 5 seeds). $p$-values from paired t-test vs. HTSPF_Full.\label{tab:cifar100}}
-\begin{tabular}{lcccc}
+\begin{tabular}{lcccccc}
 \toprule
-Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Significant \\
+Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Significant & Sparsity (\%) & GFLOPs \\
 \midrule
-\textbf{HTSPF_Full} & \textbf{78.25 $\pm$ 0.38} & --- & --- & --- \\
-HTSPF_noASG & 78.19 $\pm$ 0.26 & +0.06 & 0.8125 & \times \\
-HTSPF_noConflict & 77.23 $\pm$ 0.35 & +1.01 & 0.0494 & \checkmark \\
-HTSPF_noHCAA & 74.95 $\pm$ 1.03 & +3.30 & 0.0065 & \checkmark \\
-HTSPF_noLDWT & 76.14 $\pm$ 0.62 & +2.11 & 0.0010 & \checkmark \\
-perceiver_io & 75.66 $\pm$ 0.77 & +2.59 & 0.0057 & \checkmark \\
-resnet18 & 74.92 $\pm$ 0.62 & +3.33 & 0.0005 & \checkmark \\
-vit_small & 76.45 $\pm$ 0.34 & +1.79 & 0.0042 & \checkmark \\
+\textbf{HTSPF_Full} & \textbf{78.25 $\pm$ 0.38} & --- & --- & --- & 82.9\% & 0.50 \\
+HTSPF_noASG & 78.19 $\pm$ 0.26 & +0.06 & 0.8125 & \times & 0.0\% & 1.20 \\
+HTSPF_noConflict & 77.23 $\pm$ 0.35 & +1.01 & 0.0494 & \checkmark & 82.2\% & 0.50 \\
+HTSPF_noHCAA & 74.95 $\pm$ 1.03 & +3.30 & 0.0065 & \checkmark & 81.3\% & 0.50 \\
+HTSPF_noLDWT & 76.14 $\pm$ 0.62 & +2.11 & 0.0010 & \checkmark & 81.8\% & 0.50 \\
+perceiver_io & 75.66 $\pm$ 0.77 & +2.59 & 0.0057 & \checkmark & 0.0\% & 0.50 \\
+resnet18 & 74.92 $\pm$ 0.62 & +3.33 & 0.0005 & \checkmark & 0.0\% & 0.50 \\
+vit_small & 76.45 $\pm$ 0.34 & +1.79 & 0.0042 & \checkmark & 0.0\% & 0.50 \\
 \bottomrule
 \end{tabular}
 \end{table}
