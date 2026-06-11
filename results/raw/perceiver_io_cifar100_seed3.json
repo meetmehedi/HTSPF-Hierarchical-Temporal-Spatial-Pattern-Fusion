@@ -1,0 +1,11 @@
+{
+  "model": "perceiver_io",
+  "dataset": "cifar100",
+  "seed": 3,
+  "test_acc": 75.68873877224566,
+  "test_loss": 1.2204710085084005,
+  "sparsity": 1.0,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

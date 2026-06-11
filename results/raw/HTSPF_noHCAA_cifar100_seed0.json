@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noHCAA",
+  "dataset": "cifar100",
+  "seed": 0,
+  "test_acc": 74.1917091902039,
+  "test_loss": 0.7416094570841583,
+  "sparsity": 0.18146718252493407,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

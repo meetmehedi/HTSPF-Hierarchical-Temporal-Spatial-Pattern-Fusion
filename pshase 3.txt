@@ -1,0 +1,121 @@
+# Phase 3: PhD-Grade Benchmark Experiments
+
+A bulletproof empirical validation requires more than reporting a single accuracy number. It demands **statistical rigor**, **meaningful baselines**, **ablation studies that isolate each component's contribution**, and **reproducibility infrastructure**. This plan delivers all four.
+
+---
+
+## What "PhD-Grade" Means Here
+
+> [!IMPORTANT]
+> A top-venue reviewer (TPAMI/NeurIPS) will reject a paper if it cannot answer:
+> 1. Does HTSPF beat well-chosen baselines, or just poorly chosen ones?
+> 2. Which of the three components (USE, HCAA, ASG) actually drives the improvement?
+> 3. Are the results statistically significant or within random seed variance?
+> 4. Are the results reproducible independently?
+>
+> Every section below is designed to provide a decisive answer to one of these.
+
+---
+
+## Experimental Design
+
+### Datasets (Domain Diversity)
+| Domain | Dataset | Classes | Notes |
+|---|---|---|---|
+| Vision | **CIFAR-100** | 100 | Standard; finer-grained than CIFAR-10 |
+| Time-Series | **FordA** (UCR) | 2 | Widely used binary TSC benchmark |
+| Time-Series | **EthanolConcentration** (UCR) | 4 | Multi-class, representative of real-world sensors |
+| Multimodal (*deferred to Phase 5*) | AudioSet | — | Included in proposal; too large for local runs |
+
+### Baselines (Each Paired to a Research Claim)
+| Baseline | Claim It Tests |
+|---|---|
+| **ViT-Small** (vision only) | Does USE+HCAA match purpose-built vision transformers? |
+| **InceptionTime** (time-series only) | Does HTSPF beat the best deep TSC baseline? |
+| **Perceiver IO** (cross-domain) | Does HTSPF's explicit conflict resolution beat a naive unified architecture? |
+| **ResNet-18** (vision only) | Lower bound: does HTSPF beat a classic CNN? |
+
+### Ablation Studies (Component Attribution)
+| Ablation | What Is Removed |
+|---|---|
+| **HTSPF-Full** | All components (our model) |
+| **HTSPF-noHCAA** | Replace HCAA with standard MHA (no CDM/Fisher) |
+| **HTSPF-noASG** | Remove ASG; all pathways active at inference |
+| **HTSPF-noLDWT** | Replace USE's LDWT with a simple linear projector |
+| **HTSPF-noConflict** | Keep HCAA but disable the CDM (soft blend only, $\beta=\infty$) |
+
+### Statistical Rigor
+- Run each experiment **5 times** with different random seeds (seeds: 0, 1, 2, 3, 4).
+- Report **mean ± standard deviation** for all metrics.
+- Apply a **paired t-test** between HTSPF-Full and each baseline; report p-values.
+- A result is "significant" at $p < 0.05$.
+
+---
+
+## Metrics
+| Metric | Why |
+|---|---|
+| **Top-1 Accuracy** | Primary task metric |
+| **Avg. Pathway Sparsity** $\mathbb{E}[m_k]$ | Validates ASG efficiency claim |
+| **FLOPs at Inference** | Hardware deployability |
+| **Training Stability** (loss variance) | Tests CDM's conflict resolution claim |
+
+---
+
+## Proposed New Files
+
+### Core Experimental Infrastructure (`src/`)
+#### [NEW] `src/data.py` — Unified Dataloader Factory
+- CIFAR-100 with standard train/val/test splits.
+- UCR dataset downloader and parser (FordA, EthanolConcentration) via `tslearn` or direct `.arff` parsing.
+- All dataloaders return `(X_tensor, y_tensor)` with normalized inputs.
+
+#### [NEW] `src/train.py` — Training Engine
+- `train_epoch(model, loader, optimizer, lambda_sparsity)` function.
+- `evaluate(model, loader)` returning `{accuracy, sparsity, flops}`.
+- Full training loop with `EarlyStopping(patience=10)` to prevent overfitting.
+- `set_seed(seed)` for reproducibility (sets `torch`, `numpy`, `random` seeds).
+
+#### [NEW] `src/baselines.py` — Baseline Wrappers
+- Thin wrappers around `torchvision.models.vit_b_16` and `torchvision.models.resnet18`.
+- `InceptionTime` implemented in pure PyTorch (from the paper; ~3 residual InceptionModule blocks).
+- `PerceiverIO` adapted from a lightweight reference implementation.
+
+#### [NEW] `src/ablations.py` — Ablation Model Variants
+- `HTSPF_noHCAA`: subclasses `HTSPF`, overrides HCAA with `nn.MultiheadAttention`.
+- `HTSPF_noASG`: subclasses `HTSPF`, sets all pathway masks to 1.
+- `HTSPF_noLDWT`: subclasses `USE`, replaces the LDWT loop with a single linear layer.
+- `HTSPF_noConflict`: subclasses `HCAA`, sets $\beta = \infty$ (disabling hard suppression).
+
+#### [NEW] `src/metrics.py` — Evaluation Utilities
+- `compute_flops(model, input_shape)` using `ptflops`.
+- `paired_ttest(results_a, results_b)` using `scipy.stats`.
+- `format_results_table(results_dict)` outputting a LaTeX-ready table.
+
+#### [NEW] `configs/experiment.yaml` — Reproducible Config
+- All hyperparameters in a single YAML file (lr, batch_size, epochs, lambda_sparsity, beta, gamma, seeds, etc.).
+- Loaded at runtime so no hardcoded magic numbers.
+
+### Scripts
+#### [NEW] `scripts/run_full_benchmark.sh`
+- Loops over all experiments (models × datasets × seeds) and saves results to `results/raw/`.
+
+#### [NEW] `scripts/compile_results.py`
+- Aggregates `results/raw/*.json` into mean ± std tables.
+- Runs the paired t-tests automatically.
+- Outputs `results/final_table.tex` (camera-ready LaTeX).
+
+---
+
+## Verification Plan
+
+### Dry Run (Sanity Check)
+- Run a 2-epoch dry run with `--fast` flag (tiny batch, no checkpointing) to confirm all models train and evaluate without error.
+
+### Full Benchmark
+- Once the dry run passes, run all seeds. Estimated time: ~30-45 minutes on CPU for CIFAR-100 (small model).
+
+### Results Validation
+- Confirm that **HTSPF-Full outperforms HTSPF-noHCAA** (validates HCAA's contribution).
+- Confirm that **HTSPF-Full has lower FLOPs than HTSPF-noASG** (validates ASG's efficiency).
+- If HTSPF-Full does NOT beat Perceiver IO, this is a significant finding that needs to be addressed (either improve the model or reframe the contribution).

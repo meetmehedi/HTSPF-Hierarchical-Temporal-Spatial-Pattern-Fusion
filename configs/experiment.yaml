@@ -1,0 +1,90 @@
+# ============================================================
+# HTSPF Experiment Configuration
+# All hyperparameters are centralized here. No magic numbers
+# in the training code. To reproduce results, use this file.
+# ============================================================
+
+experiment:
+  name: "HTSPF_Phase3_Benchmarks"
+  output_dir: "results"
+  log_interval: 10       # Print metrics every N batches
+  checkpoint_dir: "checkpoints"
+
+reproducibility:
+  seeds: [0, 1, 2, 3, 4] # 5 seeds for mean ± std reporting
+
+model:
+  d_model: 128           # Base embedding dimension D
+  ldwt_scales: 3         # Number of LDWT decomposition scales J
+  num_heads: 4           # Attention heads in HCAA
+  beta: 1.5              # Fisher hard-suppression threshold
+  gamma: 0.5             # ASG gating threshold at inference
+  num_pathways: 2        # Number of HCAA pathways fed into ASG
+  num_classes:           # Set per-dataset in the runner script
+    cifar10: 10
+    cifar100: 100
+    ford_a: 2
+    ethanol_concentration: 4
+
+training:
+  epochs: 50
+  early_stopping_patience: 10
+  optimizer: "adamw"
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  scheduler: "cosine"    # CosineAnnealingLR
+  batch_size: 64
+  num_workers: 4
+  lambda_sparsity: 0.05  # Weight of ASG sparsity regularization loss
+
+# Dataset-specific settings
+datasets:
+  cifar10:
+    root: "/Users/md.mehedihasan/Documents/HTSPF/datset from kaggle/cifar-10"
+    patch_size: 4
+    image_size: 32
+    num_channels: 3
+    val_split: 0.1
+
+  cifar100:
+    root: "uoft-cs/cifar100"
+    patch_size: 4        # 32x32 image -> 8x8=64 patches
+    image_size: 32
+    num_channels: 3
+    val_split: 0.1       # Fraction of train set used for validation
+
+  ford_a:
+    root: "data/ucr"
+    name: "FordA"
+    num_channels: 1      # Univariate
+
+  ethanol_concentration:
+    root: "data/ucr"
+    name: "EthanolConcentration"
+    num_channels: 3      # Multivariate
+
+# Baseline models to evaluate
+baselines:
+  - name: "resnet18"
+    modality: "vision"
+    datasets: ["cifar10", "cifar100"]
+  - name: "vit_small"
+    modality: "vision"
+    datasets: ["cifar10", "cifar100"]
+  - name: "inception_time"
+    modality: "timeseries"
+    datasets: ["ford_a", "ethanol_concentration"]
+  - name: "perceiver_io"
+    modality: "vision"
+    datasets: ["cifar10", "cifar100"]
+
+# Ablation variants to evaluate
+ablations:
+  - name: "HTSPF_noHCAA"
+    description: "Replace HCAA with standard MHA (no CDM/Fisher)"
+  - name: "HTSPF_noASG"
+    description: "All pathways active; no sparsity gate"
+  - name: "HTSPF_noLDWT"
+    description: "Replace LDWT with a simple linear projector"
+  - name: "HTSPF_noConflict"
+    description: "HCAA active but CDM disabled (soft blend only)"

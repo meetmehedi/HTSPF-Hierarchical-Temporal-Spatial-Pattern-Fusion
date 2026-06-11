@@ -1,0 +1,11 @@
+{
+  "model": "ast_audio_spectrogram",
+  "dataset": "ravdess",
+  "seed": 2,
+  "test_acc": 81.1954748104641,
+  "test_loss": 0.628757891188265,
+  "sparsity": 0.20066189268798426,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

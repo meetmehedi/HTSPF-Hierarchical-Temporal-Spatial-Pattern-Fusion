@@ -1,0 +1,11 @@
+{
+  "model": "vit_small",
+  "dataset": "cifar100",
+  "seed": 4,
+  "test_acc": 76.02673082781631,
+  "test_loss": 1.3292325415534458,
+  "sparsity": 1.0,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

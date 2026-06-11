@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noLDWT",
+  "dataset": "ethanol_concentration",
+  "seed": 3,
+  "test_acc": 74.65997187819073,
+  "test_loss": 1.0843692749923013,
+  "sparsity": 0.18072903187267297,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

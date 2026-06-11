@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_Full",
+  "dataset": "cifar100",
+  "seed": 1,
+  "test_acc": 78.17884801142168,
+  "test_loss": 0.5406257638471568,
+  "sparsity": 0.17645041529637856,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

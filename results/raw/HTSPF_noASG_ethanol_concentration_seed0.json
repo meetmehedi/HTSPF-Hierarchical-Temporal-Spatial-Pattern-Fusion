@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noASG",
+  "dataset": "ethanol_concentration",
+  "seed": 0,
+  "test_acc": 76.51084529667564,
+  "test_loss": 1.3415812063978172,
+  "sparsity": 1.0,
+  "gflops": 1.2,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

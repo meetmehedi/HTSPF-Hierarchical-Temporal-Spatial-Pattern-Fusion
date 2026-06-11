@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noASG",
+  "dataset": "ford_a",
+  "seed": 0,
+  "test_acc": 96.06148720229692,
+  "test_loss": 0.8166681500854283,
+  "sparsity": 1.0,
+  "gflops": 1.2,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

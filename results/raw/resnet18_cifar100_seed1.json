@@ -1,0 +1,11 @@
+{
+  "model": "resnet18",
+  "dataset": "cifar100",
+  "seed": 1,
+  "test_acc": 75.02222885329913,
+  "test_loss": 1.0879382034783953,
+  "sparsity": 1.0,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

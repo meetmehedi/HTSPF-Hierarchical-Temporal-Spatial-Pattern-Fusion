@@ -1,0 +1,11 @@
+{
+  "model": "inception_time",
+  "dataset": "ford_a",
+  "seed": 4,
+  "test_acc": 95.8422956936332,
+  "test_loss": 0.9511375945702875,
+  "sparsity": 1.0,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

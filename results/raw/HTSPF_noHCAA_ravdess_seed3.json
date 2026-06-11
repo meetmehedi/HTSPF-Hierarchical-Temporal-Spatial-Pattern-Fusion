@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noHCAA",
+  "dataset": "ravdess",
+  "seed": 3,
+  "test_acc": 77.94824858246595,
+  "test_loss": 1.3039793418172532,
+  "sparsity": 0.17424056025371223,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

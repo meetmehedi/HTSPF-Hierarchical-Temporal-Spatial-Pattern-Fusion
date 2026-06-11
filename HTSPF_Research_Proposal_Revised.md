@@ -1,0 +1,113 @@
+# RESEARCH PROPOSAL
+**Hierarchical Temporal-Spatial Pattern Fusion (HTSPF):**
+**A Unified Cross-Domain Pattern Recognition Framework**
+
+**Researcher:** Md. Mehedi Hasan
+**Affiliation:** Dhaka International University (DIU), Bangladesh
+**Supervisor:** Prof. Dr. Md. Abdul Based
+**Contact:** meetmehedi1@gmail.com | mdmehedihasan.us
+**Date:** June 2026
+**Target Venue:** IEEE TPAMI / Pattern Recognition (Elsevier) / CVPR / NeurIPS
+
+---
+
+## 1. Introduction
+Pattern recognition is one of the foundational challenges in artificial intelligence, underpinning advances in computer vision, natural language processing, time-series analysis, and multimodal learning. Despite decades of progress, existing approaches remain largely domain-specific: convolutional neural networks for images, transformers for text, recurrent architectures for sequences. This fragmentation creates significant barriers to generalizable intelligence — systems that can recognize meaningful structure across diverse input types without domain-specific retraining.
+
+This proposal presents the Hierarchical Temporal-Spatial Pattern Fusion (HTSPF) framework — a novel, unified pattern recognition approach that treats all input modalities as spatiotemporal signals, processes them through a shared hierarchical decomposition pipeline, and resolves conflicting patterns at multiple scales. HTSPF draws on insights from signal processing, continual learning, and attention mechanisms to deliver a single framework that achieves competitive or superior performance across vision, language, sequential, and multimodal tasks — while remaining interpretable and lightweight at inference time.
+
+## 2. Problem Statement
+The central challenge addressed by this research is the absence of a general-purpose, modality-agnostic pattern recognition algorithm that is simultaneously:
+*   **Accurate** across diverse input domains (images, text, time series, multimodal)
+*   **Efficient** — deployable in resource-constrained environments without domain-specific pipelines
+*   **Robust** — capable of handling noisy, incomplete, or adversarially perturbed inputs
+*   **Interpretable** — providing explanations for recognized patterns aligned with SHAP-compatible attribution
+
+Current state-of-the-art systems address these dimensions in isolation. **No published framework unifies them under a single mathematical formulation.** This gap is particularly acute in low-resource settings such as Bangladesh, where deployment of multiple domain-specific models is computationally prohibitive. The absence of a unified framework also limits cross-modal transfer learning, an increasingly critical capability in real-world AI applications.
+
+## 3. Review of Existing Work
+**3.1 Domain-Specific Pattern Recognition**
+Computer vision has been dominated by convolutional neural networks (CNNs) since AlexNet [1], with subsequent architectures such as ResNet, EfficientNet, and Vision Transformers (ViT) achieving state-of-the-art results on standard benchmarks. For sequential data, Long Short-Term Memory (LSTM) networks and temporal convolutional networks (TCN) have been widely adopted. NLP has been transformed by transformer architectures [2], with models like BERT and GPT demonstrating powerful contextual pattern recognition in text.
+
+**3.2 Cross-Domain and Multimodal Approaches**
+Recent work has begun to explore cross-domain generalization. Perceiver [3] proposes a general architecture that reduces arbitrary inputs to a latent space via cross-attention. Unified-IO [4] extends this to multimodal tasks. However, these approaches rely on massive parameter counts and lack explicit conflict resolution between competing pattern hypotheses. They also provide limited interpretability, a significant limitation in domains requiring transparency.
+
+**3.3 Continual Learning and Pattern Conflict**
+Catastrophic forgetting in continual learning systems is fundamentally a pattern conflict problem — new patterns overwrite existing ones. Elastic Weight Consolidation (EWC) [5] and Gradient Episodic Memory (GEM) [6] address this through parameter regularization and gradient projection, respectively. The author's prior work on MEWC-LLM [10] introduces Fisher-based truth importance scoring and gradient conflict detection (CATP) — mechanisms directly applicable to the pattern conflict resolution component of HTSPF.
+
+**3.4 Research Gap**
+No existing framework provides: (1) modality-agnostic signal representation, (2) explicit hierarchical conflict resolution across scales, (3) adaptive inference-time sparsity, and (4) built-in interpretability — all within a single unified architecture. HTSPF addresses this gap directly.
+
+## 4. Research Questions
+*   **RQ1:** Can all pattern recognition modalities (image, text, time series, multimodal) be represented as a unified spatiotemporal signal without loss of discriminative information?
+*   **RQ2:** Does explicit hierarchical conflict-aware attention improve pattern recognition accuracy over standard multi-scale attention, particularly in noisy or ambiguous inputs?
+*   **RQ3:** Can adaptive sparsity gating reduce inference-time computational cost without statistically significant accuracy degradation?
+*   **RQ4:** Does HTSPF's frequency-context manifold representation yield SHAP-compatible pattern attributions that are meaningfully interpretable to domain experts?
+*   **RQ5:** Does HTSPF generalize effectively to low-resource deployment settings relevant to South Asian and Global South contexts?
+
+## 5. Research Objectives
+*   Develop the Universal Signal Embedding (USE) component: a learnable wavelet-style transform that maps heterogeneous inputs to a unified 2D frequency-context manifold.
+*   Formalize the Hierarchical Conflict-Aware Attention (HCAA) mechanism and prove theoretical properties of conflict resolution under competing pattern hypotheses.
+*   Design and implement the Adaptive Sparsity Gate (ASG) for runtime pruning of redundant pattern pathways.
+*   Validate HTSPF on established cross-domain and multimodal benchmarks (e.g., CIFAR-100, UCR TSC, AudioSet, VQA v2).
+*   Produce a SHAP-integrated interpretability layer and evaluate explanation quality with domain experts.
+*   Benchmark HTSPF against state-of-the-art domain-specific and unified baselines (e.g., Perceiver IO, Data2Vec, ImageBind).
+
+## 6. Proposed Methodology
+HTSPF is structured as a three-component pipeline operating over a shared latent manifold. To ensure project feasibility, initial development (Phases 1-2) will focus on two contrasting modalities (Vision and Time-Series) to prove the core mechanisms, before expanding to NLP and multimodal data in subsequent phases.
+
+**6.1 Component 1: Universal Signal Embedding (USE)**
+Any input modality — pixel grid, token embedding sequence, sensor stream, or feature vector — is projected into a 2D frequency-context manifold using a learnable discrete wavelet transform (LDWT). To resolve dimensional mismatches before the LDWT, a lightweight, modality-specific linear projection layer first aligns raw inputs to a uniform dimensionality. Unlike fixed wavelet bases, the transform parameters are learned end-to-end, enabling the manifold to adapt to domain-specific structure while preserving cross-domain comparability. Formally, given input X, the embedding E = LDWT(Project(X); theta) where theta are trainable parameters optimized jointly with downstream tasks.
+
+**6.2 Component 2: Hierarchical Conflict-Aware Attention (HCAA)**
+HCAA operates on the embedded manifold at multiple scales (fine, mid, coarse). At each scale, a standard self-attention mechanism identifies candidate patterns. A novel Conflict Detection Module (CDM) — adapting the CATP mechanism from our prior work on MEWC-LLM [10] — identifies pairs of pattern hypotheses that produce contradictory predictions and applies a weighted resolution strategy. Patterns with higher Fisher information scores suppress conflicting lower-confidence patterns. To ensure inference efficiency, the Fisher information scores are computed offline during training as a learned prior (e.g., via a diagonal approximation), serving as an adaptive regularizer rather than requiring dynamic runtime computation.
+
+**6.3 Component 3: Adaptive Sparsity Gate (ASG)**
+At inference time, the ASG evaluates the activation distribution of each pattern pathway and prunes pathways whose contributions fall below a learned threshold. This gating is input-conditioned: simple patterns require fewer active pathways, while complex or ambiguous inputs retain full capacity. The gate is trained with a sparsity regularization term encouraging efficient inference without accuracy loss.
+
+### Project Timeline
+
+| Phase | Activity | Output |
+| :--- | :--- | :--- |
+| **Phase 1** | Theoretical formalization of USE, HCAA, and ASG; mathematical proofs. Initial focus on Vision and Time-Series. | Architecture specification document |
+| **Phase 2** | Implementation in PyTorch; unit testing of each component. | Codebase (GitHub) |
+| **Phase 3** | Benchmark experiments on multimodal and cross-domain datasets (CIFAR-100, UCR TSC, AudioSet, VQA v2). Compare against Perceiver IO, Data2Vec. | Results tables and ablation studies |
+| **Phase 4** | SHAP integration, interpretability evaluation, expert validation. | Interpretability report |
+| **Phase 5** | Paper writing, peer review, open-source release. | Submitted journal article |
+
+## 7. Unique Contributions
+*   First unified pattern recognition framework treating all modalities as spatiotemporal signals via a learnable wavelet embedding — eliminating the need for complex domain-specific preprocessing pipelines.
+*   Novel Hierarchical Conflict-Aware Attention (HCAA) mechanism with Fisher-weighted conflict resolution — a direct generalization of continual learning gradient conflict techniques to pattern recognition.
+*   Input-conditioned Adaptive Sparsity Gate (ASG) enabling variable-cost inference without retraining — critical for deployment in resource-constrained settings.
+*   Built-in SHAP-compatible interpretability via frequency-context manifold attribution, providing transparent explanations across all supported modalities.
+*   Empirical validation across varied domains on standard unimodal and multimodal benchmarks, with ablation studies isolating each component's contribution against unified baselines.
+*   Explicit connection to prior continual learning work (MEWC-LLM / CATP), establishing a coherent research thread from pattern conflict in sequential learning to pattern conflict in cross-domain recognition.
+
+## 8. Outcomes and Impact
+**8.1 Academic Outputs**
+*   Primary journal paper targeting IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) or Pattern Recognition (Elsevier, Q1).
+*   Conference paper at CVPR, NeurIPS, or ICLR presenting core HCAA mechanism.
+*   Open-source PyTorch implementation with documentation on GitHub.
+
+**8.2 Practical Impact**
+HTSPF has direct applicability to several real-world domains including healthcare (cross-modal diagnostic pattern recognition), smart agriculture (multi-sensor crop monitoring), fraud detection (sequential-behavioral pattern fusion), and educational technology (multimodal student engagement analysis). In the Bangladesh context, the lightweight inference mode enables deployment on resource-constrained hardware without cloud dependency — a critical consideration for equitable AI access.
+
+**8.3 Strategic Research Impact**
+This work strengthens the researcher's PhD application portfolio by demonstrating mastery of theoretical foundations (signal processing, attention mechanisms), empirical rigor (multi-domain benchmarking), and cross-cutting innovation (connecting continual learning and pattern recognition). It directly supports the long-term research trajectory toward Mila/UdeM, where Prof. Irina Rish's group works at the frontier of generalization and continual learning.
+
+## 9. Conclusion
+Pattern recognition at the frontier of AI requires moving beyond domain-specific solutions toward unified frameworks capable of recognizing structure in any input modality. HTSPF addresses this challenge through three novel mechanisms — Universal Signal Embedding, Hierarchical Conflict-Aware Attention, and Adaptive Sparsity Gate — that together deliver accuracy, efficiency, robustness, and interpretability within a single coherent framework.
+
+The theoretical foundations are grounded in established signal processing and attention literature, while the conflict resolution mechanism represents a genuine innovation derived from the researcher's prior continual learning work. The experimental validation plan is rigorous and benchmarked against state-of-the-art unified baselines. HTSPF has the potential to become a reference framework for cross-domain pattern recognition, with practical impact in low-resource deployment environments and strategic impact on the researcher's international PhD trajectory.
+
+## 10. References
+[1] Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). ImageNet classification with deep convolutional neural networks. NeurIPS.
+[2] Vaswani, A., et al. (2017). Attention is all you need. NeurIPS.
+[3] Jaegle, A., et al. (2021). Perceiver: General perception with iterative attention. ICML.
+[4] Lu, J., et al. (2022). Unified-IO: A unified model for vision, language, and structured data. ICLR.
+[5] Kirkpatrick, J., et al. (2017). Overcoming catastrophic forgetting in neural networks. PNAS.
+[6] Lopez-Paz, D., & Ranzato, M. (2017). Gradient episodic memory for continual learning. NeurIPS.
+[7] Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions. NeurIPS.
+[8] Mallat, S. (1989). A theory for multiresolution signal decomposition: The wavelet representation. IEEE TPAMI.
+[9] Dosovitskiy, A., et al. (2021). An image is worth 16x16 words: Transformers for image recognition at scale. ICLR.
+[10] Hasan, M. M. (2025). MEWC-LLM: Multi-Expert Weight Consolidation for Continual Learning in Large Language Models. [Under Review].

@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noASG",
+  "dataset": "ag_news",
+  "seed": 3,
+  "test_acc": 95.02105567220221,
+  "test_loss": 1.4063294475661818,
+  "sparsity": 1.0,
+  "gflops": 1.2,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

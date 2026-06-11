@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_Full",
+  "dataset": "ravdess",
+  "seed": 4,
+  "test_acc": 81.98093564241469,
+  "test_loss": 0.5719863694578805,
+  "sparsity": 0.19931413788372757,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

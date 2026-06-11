@@ -1,0 +1,11 @@
+{
+  "model": "inception_time",
+  "dataset": "ethanol_concentration",
+  "seed": 3,
+  "test_acc": 77.22578592546277,
+  "test_loss": 1.0919408401036037,
+  "sparsity": 1.0,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

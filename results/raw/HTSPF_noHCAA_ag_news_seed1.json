@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noHCAA",
+  "dataset": "ag_news",
+  "seed": 1,
+  "test_acc": 92.19436501426124,
+  "test_loss": 1.035000274175776,
+  "sparsity": 0.14990353788371158,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

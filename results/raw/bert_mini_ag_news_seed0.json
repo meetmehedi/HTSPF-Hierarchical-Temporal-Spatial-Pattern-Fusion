@@ -1,0 +1,11 @@
+{
+  "model": "bert_mini",
+  "dataset": "ag_news",
+  "seed": 0,
+  "test_acc": 93.47611150719219,
+  "test_loss": 0.5057160097767415,
+  "sparsity": 0.1854336085292737,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

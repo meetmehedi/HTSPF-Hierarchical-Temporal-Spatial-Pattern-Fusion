@@ -1,0 +1,16 @@
+\begin{table}[h]
+\centering
+\caption{Results on EthanolConcentration (UCR) (mean \pm std over 5 seeds). $p$-values from paired t-test vs. HTSPF_Full.\label{tab:ethanol_concentration}}
+\begin{tabular}{lcccc}
+\toprule
+Model & Accuracy (\%) & $\Delta$ (pp) & $p$-value & Significant \\
+\midrule
+\textbf{HTSPF_Full} & \textbf{75.56 $\pm$ 0.65} & --- & --- & --- \\
+HTSPF_noASG & 77.61 $\pm$ 0.83 & -2.05 & 0.0400 & \checkmark \\
+HTSPF_noConflict & 74.57 $\pm$ 1.02 & +0.99 & 0.2270 & \times \\
+HTSPF_noHCAA & 73.42 $\pm$ 1.65 & +2.14 & 0.0354 & \checkmark \\
+HTSPF_noLDWT & 71.56 $\pm$ 1.72 & +4.00 & 0.0185 & \checkmark \\
+inception_time & 75.70 $\pm$ 0.88 & -0.14 & 0.8501 & \times \\
+\bottomrule
+\end{tabular}
+\end{table}

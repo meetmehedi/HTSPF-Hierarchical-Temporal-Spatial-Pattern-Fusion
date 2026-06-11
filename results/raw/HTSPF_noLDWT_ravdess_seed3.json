@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noLDWT",
+  "dataset": "ravdess",
+  "seed": 3,
+  "test_acc": 75.42997042079688,
+  "test_loss": 0.6735785678893509,
+  "sparsity": 0.1858598678294024,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}

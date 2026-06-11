@@ -1,0 +1,11 @@
+{
+  "model": "HTSPF_noLDWT",
+  "dataset": "ag_news",
+  "seed": 2,
+  "test_acc": 93.37076201298602,
+  "test_loss": 0.6094702658703375,
+  "sparsity": 0.20236106690680078,
+  "gflops": 0.5,
+  "time_s": 140.0,
+  "epochs_run": 50
+}
