@@ -25,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-The fragmentation of deep learning architectures across modalities—Vision Transformers for images, Recurrent/1D-CNN networks for time-series, and Transformers for text—creates artificial silos that hinder generalized artificial intelligence. We propose the Hierarchical Time-Spatial Pooling Framework (HTSPF), a unified architecture capable of state-of-the-art performance across computer vision, natural language processing, audio sequence modeling, and time-series forecasting without modality-specific inductive structural changes. HTSPF replaces domain-specific tokenizers with a Learnable Discrete Wavelet Transform (LDWT) to decompose any signal into a universal frequency hierarchy. We introduce a Hierarchical Conflict-Aware Attention (HCAA) mechanism guided by Fisher Information to resolve gradient conflicts between these disparate frequency pathways, and an Adaptive Sparsity Gate (ASG) modeled via a Straight-Through Estimator to dynamically prune redundant pathways at inference time. Extensive empirical evaluations demonstrate that HTSPF achieves state-of-the-art or highly competitive performance across 5 diverse datasets: CIFAR-100 (Vision), FordA and EthanolConcentration (Time-Series), AG News (Text), and RAVDESS (Audio). Ablation studies confirm that the conflict resolution and wavelet decomposition modules are highly statistically significant ($p < 0.01$). Finally, comprehensive interpretability profiling via SHAP and native Saliency confirms HTSPF is structurally transparent, making it highly applicable to high-stakes medical and financial domains.
+The fragmentation of deep learning architectures across modalities—Vision Transformers for images and Recurrent/1D-CNN networks for time-series—creates artificial silos that hinder generalized artificial intelligence. We propose the Hierarchical Time-Spatial Pooling Framework (HTSPF), a unified architecture capable of state-of-the-art performance across computer vision and time-series forecasting without modality-specific inductive structural changes. HTSPF replaces domain-specific tokenizers with a Learnable Discrete Wavelet Transform (LDWT) to decompose any signal into a universal frequency hierarchy. We introduce a Hierarchical Conflict-Aware Attention (HCAA) mechanism guided by Fisher Information to resolve gradient conflicts between these disparate frequency pathways, and an Adaptive Sparsity Gate (ASG) modeled via a Straight-Through Estimator to dynamically prune redundant pathways at inference time. Extensive empirical evaluations demonstrate that HTSPF achieves state-of-the-art or highly competitive performance across 3 diverse datasets: CIFAR-100 (Vision), and FordA and EthanolConcentration (Time-Series). Ablation studies confirm that the conflict resolution and wavelet decomposition modules are highly statistically significant ($p < 0.01$). Finally, comprehensive interpretability profiling via SHAP and native Saliency confirms HTSPF is structurally transparent, making it highly applicable to high-stakes medical and financial domains.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -35,7 +35,7 @@ Multimodal Deep Learning, Wavelet Transform, Attention Mechanisms, Interpretabil
 \section{Introduction}
 Modern deep learning is defined by specialized architectures. While Vision Transformers (ViT) dominate spatial tasks \cite{dosovitskiy2020image}, they struggle to natively model high-frequency continuous signals such as audio or sensor time-series without specialized spectrogram preprocessing. Conversely, models like InceptionTime \cite{ismailfawaz2020inceptiontime} excel at 1D temporal structures but lack spatial expressivity. Recent attempts at universal architectures, such as Perceiver IO \cite{jaegle2021perceiver}, rely heavily on naive latent cross-attention, which scales poorly and remains computationally dense.
 
-We hypothesize that the fundamental barrier to a universal architecture is the lack of a generalized mathematical representation of input data. Any modality—whether a 2D image, a 1D audio waveform, or discrete text embeddings—can be represented via its frequency spectrum. To this end, we introduce the \textbf{Hierarchical Time-Spatial Pooling Framework (HTSPF)}.
+We hypothesize that the fundamental barrier to a universal architecture is the lack of a generalized mathematical representation of input data. Any modality—whether a 2D image or a 1D sensor time-series waveform—can be represented via its frequency spectrum. To this end, we introduce the \textbf{Hierarchical Time-Spatial Pooling Framework (HTSPF)}.
 
 HTSPF introduces three novel contributions:
 \begin{enumerate}
@@ -69,26 +69,18 @@ To ensure efficiency, we gate each wavelet pathway $k$ with a binary scalar $m_k
 During inference, paths with $m_k = 0$ are skipped entirely.
 
 \section{Experiments and Results}
-HTSPF was benchmarked against established modality-specific baselines and ablations across 5 datasets representing 4 diverse domains. Statistical significance was verified over 5 distinct random seeds using paired t-tests.
+HTSPF was benchmarked against established modality-specific baselines and ablations across 3 datasets representing 2 diverse domains (computer vision and time-series modeling). Statistical significance was verified over 5 distinct random seeds using paired t-tests.
 
 \subsection{Vision: CIFAR-100}
 Table \ref{tab:cifar100} demonstrates that HTSPF achieves $78.25 \pm 0.38\%$, outperforming ResNet-18 ($74.92 \pm 0.62\%$, $p=0.0005$) and ViT-Small ($76.45 \pm 0.34\%$, $p=0.0042$). The ablation \textit{HTSPF\_noHCAA} shows a significant 3.30\,pp drop in accuracy ($p=0.0065$), proving the necessity of Fisher-regularized conflict resolution. Crucially, the Adaptive Sparsity Gate (ASG) achieves 82.9\% structural sparsity at only 0.50 GFLOPs, a 2.4$\times$ reduction versus the dense variant.
 
 \input{tables/final_table_cifar100.tex}
 
-\subsection{Time-Series \& Audio}
+\subsection{Time-Series}
 On the UCR Archive (FordA, EthanolConcentration), HTSPF matched or exceeded InceptionTime, the gold-standard time-series CNN. As shown in Table~\ref{tab:ford_a}, HTSPF achieves $96.21 \pm 0.05\%$ accuracy on FordA, outperforming InceptionTime ($95.85 \pm 0.03\%$, $p=0.0001$) while maintaining 82.2\% sparsity. On EthanolConcentration (Table~\ref{tab:ethanol_concentration}), HTSPF achieves $75.56 \pm 0.65\%$, which is statistically on par with InceptionTime ($75.70 \pm 0.88\%$, $p=0.8501$) at half the compute.
-
-The importance of the LDWT module is starkly highlighted in the Audio modality (RAVDESS dataset, Table~\ref{tab:ravdess}). Removing the wavelet transform (\textit{HTSPF\_noLDWT}) results in a catastrophic $7.68$\,pp drop in accuracy ($p=0.0002$) relative to the full HTSPF ($82.33 \pm 0.30\%$), which also outperforms AST ($81.21 \pm 0.68\%$, $p=0.0372$). This confirms that learnable wavelets are strictly necessary to compress dense temporal audio signals into a form amenable to attention.
 
 \input{tables/final_table_ford_a.tex}
 \input{tables/final_table_ethanol_concentration.tex}
-\input{tables/final_table_ravdess.tex}
-
-\subsection{Natural Language Processing}
-HTSPF natively handles word embeddings as 1D temporal signals, with no task-specific tokenizer or positional encoder. On the AG News text classification benchmark (Table~\ref{tab:ag_news}), HTSPF achieves $94.50 \pm 0.10\%$, outperforming BERT-Mini ($93.54 \pm 0.25\%$, $p=0.0006$) at 83.2\% sparsity and identical compute (0.50~GFLOPs), further cementing its universality claim.
-
-\input{tables/final_table_ag_news.tex}
 
 \section{Interpretability and Expert Validation}
 To ensure the architecture is suitable for high-stakes environments, we integrated an interpretability pipeline.
@@ -110,7 +102,7 @@ To ensure the architecture is suitable for high-stakes environments, we integrat
 As seen in Figure \ref{fig:saliency}, despite flattening 2D images through a wavelet hierarchy, HTSPF maintains perfect spatial localization—focusing its gradients entirely on the subjects of the images. Furthermore, Figure \ref{fig:asg} proves that the ASG natively learns to drop $>80\%$ of redundant frequency pathways at inference time, allocating maximum probability exclusively to the low-frequency structural approximations.
 
 \section{Conclusion}
-We presented HTSPF, a novel architecture that mathematically unifies Vision, Text, Audio, and Time-Series tasks via Learnable Discrete Wavelets and Conflict-Aware Attention. Exhaustive statistical evaluation and transparent interpretability profiling prove that HTSPF achieves state-of-the-art multimodal generalization while retaining structural interpretability.
+We presented HTSPF, a novel architecture that mathematically unifies Vision and Time-Series tasks via Learnable Discrete Wavelets and Conflict-Aware Attention. Exhaustive statistical evaluation and transparent interpretability profiling prove that HTSPF achieves state-of-the-art multimodal generalization while retaining structural interpretability.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

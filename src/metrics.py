@@ -20,7 +20,7 @@ from typing import Dict, List, Optional
 # FLOPs Estimation
 # ──────────────────────────────────────────────
 
-def compute_flops(model, input_shape: tuple) -> Optional[float]:
+def compute_flops(model, input_shape: tuple, modality: str = "vision") -> Optional[float]:
     """
     Estimates GFLOPs for a model given an input shape (without batch dim).
     Requires `ptflops`. Falls back gracefully if not installed.
@@ -29,11 +29,23 @@ def compute_flops(model, input_shape: tuple) -> Optional[float]:
         GFLOPs as a float, or None if ptflops is unavailable.
     """
     try:
+        import torch
         from ptflops import get_model_complexity_info
+
+        def input_constructor(res):
+            try:
+                device = next(model.parameters()).device
+                dtype = next(model.parameters()).dtype
+            except StopIteration:
+                device = torch.device("cpu")
+                dtype = torch.float32
+            tensor = torch.ones((1, *res), dtype=dtype, device=device)
+            return {"x": tensor, "modality": modality}
 
         macs, params = get_model_complexity_info(
             model, input_shape, as_strings=False,
-            print_per_layer_stat=False, verbose=False
+            print_per_layer_stat=False, verbose=False,
+            input_constructor=input_constructor
         )
         # 1 MAC ≈ 2 FLOPs
         gflops = (macs * 2) / 1e9

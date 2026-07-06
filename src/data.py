@@ -80,10 +80,6 @@ def get_cifar100_dataloaders(root="uoft-cs/cifar100", batch_size=64,
         hf_dataset = load_dataset(root)
         train_full = HFDatasetWrapper(hf_dataset['train'], transform=train_transform)
         test_set = HFDatasetWrapper(hf_dataset['test'], transform=test_transform)
-        # Fast subset for CPU
-        from torch.utils.data import Subset
-        train_full = Subset(train_full, range(200))
-        test_set = Subset(test_set, range(100))
 
     except Exception as e:
         print(f"  [WARNING] CIFAR-100 HF download failed: {e}")

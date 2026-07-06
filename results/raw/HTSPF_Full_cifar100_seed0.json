@@ -2,10 +2,10 @@
   "model": "HTSPF_Full",
   "dataset": "cifar100",
   "seed": 0,
-  "test_acc": 78.63828648153086,
-  "test_loss": 0.5374449522086122,
-  "sparsity": 0.1565740452079517,
-  "gflops": 0.5,
-  "time_s": 140.0,
-  "epochs_run": 50
+  "test_acc": 15.11,
+  "test_loss": 3.615396,
+  "sparsity": 0.3858,
+  "gflops": 0.2699,
+  "time_s": 285.8,
+  "epochs_run": 2
 }

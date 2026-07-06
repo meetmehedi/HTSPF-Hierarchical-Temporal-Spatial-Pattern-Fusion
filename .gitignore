@@ -20,3 +20,9 @@ paper/*.out
 paper/*.toc
 paper/*.synctex.gz
 paper/*.pdf
+
+# Quarantined simulated/fabricated results — DO NOT COMMIT
+_do_not_use_simulated/
+
+# Runtime benchmark logs (generated, not source)
+results/timeseries_benchmark.log

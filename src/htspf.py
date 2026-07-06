@@ -2,6 +2,19 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+class MPSAdaptiveAvgPool1d(nn.Module):
+    """
+    Wrapper for F.adaptive_avg_pool1d with CPU fallback on MPS for non-divisible sizes.
+    """
+    def __init__(self, output_size):
+        super().__init__()
+        self.output_size = output_size
+
+    def forward(self, x):
+        if x.device.type == "mps" and x.size(-1) % self.output_size != 0:
+            return F.adaptive_avg_pool1d(x.cpu(), self.output_size).to(x.device)
+        return F.adaptive_avg_pool1d(x, self.output_size)
+
 class USE(nn.Module):
     """
     Universal Signal Embedding (USE) with Modality Projections and LDWT.
@@ -22,7 +35,7 @@ class USE(nn.Module):
         self.ts_proj = nn.Sequential(
             nn.Conv1d(ts_channels, d_model, kernel_size=7, padding=3),
             nn.GELU(),
-            nn.AdaptiveAvgPool1d(self.N)
+            MPSAdaptiveAvgPool1d(self.N)
         )
         self.ts_pos = nn.Parameter(torch.randn(1, d_model, self.N))
         

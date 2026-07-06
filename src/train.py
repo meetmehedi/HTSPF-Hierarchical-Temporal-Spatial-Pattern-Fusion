@@ -234,7 +234,7 @@ def run_experiment(model_name: str, dataset_name: str, seed: int,
     # ── FLOPs Estimation ──
     try:
         sample_X = next(iter(test_loader))[0][:1].to(device)
-        gflops = compute_flops(model, tuple(sample_X.shape[1:]))
+        gflops = compute_flops(model, tuple(sample_X.shape[1:]), modality=modality)
     except Exception:
         gflops = None
 
@@ -277,7 +277,12 @@ if __name__ == "__main__":
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
     print(f"Using device: {device}")
 
     results = run_experiment(
